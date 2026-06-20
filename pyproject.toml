@@ -1,0 +1,20 @@
+[project]
+name = "utel-mcp"
+version = "0.1.0"
+description = "MCP server to use as RestAPI client for Utel API"
+readme = "README.md"
+authors = [
+    { name = "Muhammadyusuf Kurbonov", email = "muhammadyusuf.kurbonov2002@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.28.0",
+]
+
+[project.scripts]
+utel-mcp = "utel_mcp:main"
+
+[build-system]
+requires = ["uv_build>=0.11,<0.12"]
+build-backend = "uv_build"
