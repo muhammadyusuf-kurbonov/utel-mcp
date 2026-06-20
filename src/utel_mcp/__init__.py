@@ -19,23 +19,16 @@ if IS_DEBUG_ENABLED:
 
 def load_predefined_headers() -> Dict[str, str]:
     """Bakes in default headers from your MCP configuration environment."""
-    headers = {}
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+    }
     
     # Support a simple global Authorization Bearer token 
     bearer_token = os.environ.get("HTTP_BEARER_TOKEN")
     if bearer_token:
         headers["Authorization"] = f"Bearer {bearer_token}"
         
-    # Support complex, multi-key setups passed as a JSON string
-    custom_headers_json = os.environ.get("HTTP_DEFAULT_HEADERS")
-    if custom_headers_json:
-        try:
-            custom_headers = json.loads(custom_headers_json)
-            if isinstance(custom_headers, dict):
-                headers.update({str(k): str(v) for k, v in custom_headers.items()})
-        except json.JSONDecodeError:
-            pass
-            
     return headers
 
 @mcp.tool()

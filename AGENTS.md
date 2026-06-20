@@ -34,10 +34,7 @@ Everything is driven by environment variables (no `.env` file is loaded automati
 | Variable | Purpose |
 |---|---|
 | `HTTP_BEARER_TOKEN` | Sets an `Authorization: Bearer <token>` header on every request |
-| `HTTP_DEFAULT_HEADERS` | JSON string of extra headers to merge on every request |
 | `MCP_DEBUG` | Set to `"true"` to log full request payloads to `/tmp/mcp_debug.log` |
-
-**Gotcha:** `HTTP_DEFAULT_HEADERS` must be valid JSON. Invalid JSON is silently ignored.
 
 ## Project conventions
 
