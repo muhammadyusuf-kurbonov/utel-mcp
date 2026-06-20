@@ -2,6 +2,7 @@ import os
 import json
 import logging
 from typing import Any, Dict, Optional
+from urllib.parse import urlparse
 import httpx
 from mcp.server.fastmcp import FastMCP
 
@@ -9,6 +10,9 @@ mcp = FastMCP("MCP server to use as RestAPI client for Utel API")
 
 # Read the flag from environment variables
 IS_DEBUG_ENABLED = os.environ.get("MCP_DEBUG", "").lower() == "true"
+
+# Base URL for the UTEL API (e.g., https://api.cc999.utel.uz/api/v1)
+UTEL_API_BASE_URL = os.environ.get("UTEL_API_BASE_URL", "")
 
 if IS_DEBUG_ENABLED:
     logging.basicConfig(
@@ -39,10 +43,22 @@ async def send_request(
     json_data: Optional[Dict[str, Any]] = None,
     params: Optional[Dict[str, Any]] = None,
 ) -> str:
-    """Sends an HTTP request with predefined configuration headers."""
+    """Send a request to the UTEL API. Only relative paths are accepted — the base URL comes from `UTEL_API_BASE_URL` env (e.g. `/ats/ps-user`). The `Authorization: Bearer` token (`HTTP_BEARER_TOKEN`) is already included. Requests to hosts outside the configured base URL are rejected."""
     method = method.upper()
-    
-    # This call will now find the function correctly right above it
+
+    if not UTEL_API_BASE_URL:
+        return "Error: `UTEL_API_BASE_URL` env var is not set."
+
+    # Build the final URL and validate it points to the same host (SSRF prevention)
+    parsed_base = urlparse(UTEL_API_BASE_URL)
+    full_url = UTEL_API_BASE_URL.rstrip("/") + "/" + url.lstrip("/")
+    parsed_url = urlparse(full_url)
+
+    if parsed_url.netloc != parsed_base.netloc:
+        return "Error: URL resolves to a different host — only endpoints within the configured `UTEL_API_BASE_URL` are allowed."
+
+    url = full_url
+
     merged_headers = load_predefined_headers()
     if headers:
         merged_headers.update(headers)
