@@ -1,96 +1,17 @@
-import os
-import json
-import logging
-from typing import Any, Dict, Optional
-from urllib.parse import urlparse
-import httpx
 from mcp.server.fastmcp import FastMCP
+
+from . import config
 
 mcp = FastMCP("MCP server to use as RestAPI client for Utel API")
 
-# Read the flag from environment variables
-IS_DEBUG_ENABLED = os.environ.get("MCP_DEBUG", "").lower() == "true"
+from . import docs
+from . import utils
+from . import handlers
 
-# Base URL for the UTEL API (e.g., https://api.cc999.utel.uz/api/v1)
-UTEL_API_BASE_URL = os.environ.get("UTEL_API_BASE_URL", "")
-
-if IS_DEBUG_ENABLED:
-    logging.basicConfig(
-        filename="/tmp/mcp_debug.log",
-        level=logging.INFO,
-        format="%(asctime)s - %(message)s"
-    )
-
-def load_predefined_headers() -> Dict[str, str]:
-    """Bakes in default headers from your MCP configuration environment."""
-    headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-    }
-    
-    # Support a simple global Authorization Bearer token 
-    bearer_token = os.environ.get("HTTP_BEARER_TOKEN")
-    if bearer_token:
-        headers["Authorization"] = f"Bearer {bearer_token}"
-        
-    return headers
-
-@mcp.tool()
-async def send_request(
-    url: str,
-    method: str = "GET",
-    headers: Optional[Dict[str, str]] = None,
-    json_data: Optional[Dict[str, Any]] = None,
-    params: Optional[Dict[str, Any]] = None,
-) -> str:
-    """Send a request to the UTEL API. Only relative paths are accepted — the base URL comes from `UTEL_API_BASE_URL` env (e.g. `/ats/ps-user`). The `Authorization: Bearer` token (`HTTP_BEARER_TOKEN`) is already included. Requests to hosts outside the configured base URL are rejected."""
-    method = method.upper()
-
-    if not UTEL_API_BASE_URL:
-        return "Error: `UTEL_API_BASE_URL` env var is not set."
-
-    # Build the final URL and validate it points to the same host (SSRF prevention)
-    parsed_base = urlparse(UTEL_API_BASE_URL)
-    full_url = UTEL_API_BASE_URL.rstrip("/") + "/" + url.lstrip("/")
-    parsed_url = urlparse(full_url)
-
-    if parsed_url.netloc != parsed_base.netloc:
-        return "Error: URL resolves to a different host — only endpoints within the configured `UTEL_API_BASE_URL` are allowed."
-
-    url = full_url
-
-    merged_headers = load_predefined_headers()
-    if headers:
-        merged_headers.update(headers)
-
-    # --- CONDITIONAL DEBUG LOGGING ---
-    if IS_DEBUG_ENABLED:
-        debug_payload = {
-            "URL": url,
-            "Method": method,
-            "Final_Headers": merged_headers,
-            "Query_Params": params,
-            "JSON_Body": json_data
-        }
-        logging.info(f"FINAL REQUEST PARAMS:\n{json.dumps(debug_payload, indent=2)}")
-    # ---------------------------------
-
-    async with httpx.AsyncClient(timeout=30.0) as client:
-        try:
-            response = await client.request(
-                method=method,
-                url=url,
-                headers=merged_headers,
-                json=json_data,
-                params=params,
-                follow_redirects=True
-            )
-            return f"Status Code: {response.status_code}\n\n{response.text}"
-        except httpx.RequestError as exc:
-            return f"An error occurred: {exc}"
 
 def main():
     mcp.run(transport="stdio")
+
 
 if __name__ == "__main__":
     main()
