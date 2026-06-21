@@ -82,6 +82,10 @@ async def get_api_index() -> str:
     lines.append("")
     lines.append("### Skill")
     lines.append("- `utel://skill` — Full UTEL API skill document (same as reference)")
+    lines.append("")
+    lines.append("### External Documentation")
+    lines.append("- [UTEL Demo API Docs](https://api.v2demo.utel.uz/docs/api)")
+    lines.append("- [UTEL Documentation Portal](https://udocs.utel.uz/)")
     return "\n".join(lines)
 
 

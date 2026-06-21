@@ -20,7 +20,11 @@ Authorization: Bearer {token}
 | 422 | Validation error — check `errors` object in response |
 | 500 | Server or third-party unexpected error |
 
-422 response structure: `{ "message": string, "errors": { field: [string] } }`""",
+    422 response structure: `{ "message": string, "errors": { field: [string] } }`
+
+## Documentation
+- [UTEL Demo API Docs](https://api.v2demo.utel.uz/docs/api)
+- [UTEL Documentation Portal](https://udocs.utel.uz/)""",
 
     "auth": """# Auth
 
@@ -407,6 +411,8 @@ UTEL_API_REFERENCE = """# UTEL API Reference
 ## Overview
 
 UTEL is a cloud IP-telephony system. Base URL: `https://api.[subdomain].utel.uz/api/v1`
+
+**Official docs:** [UTEL Demo API Docs](https://api.v2demo.utel.uz/docs/api) · [UTEL Documentation Portal](https://udocs.utel.uz/)
 
 Subdomain format: `[server-type][number]` (e.g., `cc999` or `utc999`).
 - **cc** — Hostmaster datacenter VPS (auto-allocated on registration)
