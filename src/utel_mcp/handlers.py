@@ -4,7 +4,6 @@ import posixpath
 from typing import Any, Dict, Literal, Optional
 
 import httpx
-from mcp.server.fastmcp import FastMCP
 
 from utel_mcp import mcp, docs
 from utel_mcp.config import IS_DEBUG_ENABLED, UTEL_API_BASE_URL
