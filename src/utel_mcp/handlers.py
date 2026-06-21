@@ -83,10 +83,26 @@ async def get_api_index() -> str:
         ("smart-redirect", "Smart redirect CRUD"),
         ("webhooks", "Webhook list and replace"),
         ("extension-ranges", "Extension number ranges by module"),
+        ("reference", "Full comprehensive API reference (all topics)"),
     ]
     for slug, desc in topics:
         lines.append(f"- `utel://api/{slug}` — {desc}")
+    lines.append("")
+    lines.append("### Skill")
+    lines.append("- `utel://skill` — Full UTEL API skill document (same as reference)")
     return "\n".join(lines)
+
+
+@mcp.resource("utel://api/reference")
+async def get_api_reference() -> str:
+    """Full comprehensive UTEL API reference — all endpoints, fields, types, and usage patterns."""
+    return docs.UTEL_API_REFERENCE
+
+
+@mcp.resource("utel://skill")
+async def get_skill() -> str:
+    """Full UTEL API skill document — comprehensive API reference for agents. Use this as context when working with UTEL API."""
+    return docs.UTEL_API_REFERENCE
 
 
 @mcp.resource("utel://api/{topic}")
