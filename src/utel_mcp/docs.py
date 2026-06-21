@@ -56,7 +56,7 @@ Response returns `result.access_token`. Tokens never auto-expire; use logout to 
 
 | Param | Type | Default | Description |
 |-------|------|---------|-------------|
-| per_page | integer | 20 | Records per page (1–300) |
+| per_page | integer | 20 | Records per page (1-300) |
 | sort | string | `-id` | Sort field. Prefix `-` for descending. Options: id, date_time, src, dst, external_number, duration, conversation, type, status |
 | filter.src | string | — | Caller number |
 | filter.dst | string | — | Called number |
@@ -138,7 +138,7 @@ Voicemail audio messages left by callers.
 `GET /message-voice`
 | Param | Type | Default | Description |
 |-------|------|---------|-------------|
-| per_page | integer | 20 | 1–300 |
+| per_page | integer | 20 | 1-300 |
 | sort | string | `-id` | Prefix `-` for descending |
 | filter.src | string | — | Caller number |
 | filter.dst | string | — | Called number |
@@ -159,7 +159,7 @@ Voicemail audio messages left by callers.
 
     "sip-users": """# SIP Users (PsUser)
 
-Extension range: 100–4999
+Extension range: 100-4999
 
 ## List
 `GET /ats/ps-user`
@@ -172,7 +172,7 @@ Extension range: 100–4999
 | Field | Required | Description |
 |-------|----------|-------------|
 | title | Yes | Display name |
-| number | Yes | Extension (100–4999) |
+| number | Yes | Extension (100-4999) |
 | password | Yes | Min 6 chars |
 
 ## Show
@@ -188,15 +188,15 @@ Extension range: 100–4999
 `POST /ats/ps-user/{id}/redirections`
 | Field | Description |
 |-------|-------------|
-| delay1–3 | Delay in seconds (1–3200) |
-| redirect1–3 | Target extension or number@external |
+| delay1-3 | Delay in seconds (1-3200) |
+| redirect1-3 | Target extension or number@external |
 
 ## User contact
 `GET /ats/ps-user/{id}/contact`""",
 
     "ivr": """# IVR
 
-Extension range: 5000–5199
+Extension range: 5000-5199
 
 ## List
 `GET /ats/ivr`
@@ -205,11 +205,11 @@ Extension range: 5000–5199
 `POST /ats/ivr`
 | Field | Type | Description |
 |-------|------|-------------|
-| id | integer | Extension (5000–5199) |
+| id | integer | Extension (5000-5199) |
 | allow_input | boolean | Allow DTMF input |
 | delay | integer | Delay before play |
 | output | integer | Default action target |
-| d0–d9 | integer | DTMF key targets |
+| d0-d9 | integer | DTMF key targets |
 | aster | integer | * key target |
 | sharp | integer | # key target |
 | title | string | Display name |
@@ -226,7 +226,7 @@ multipart/form-data, field `audio`, max 20MB.
 
     "groups": """# Group (Ring Group)
 
-Extension range: 5200–5399
+Extension range: 5200-5399
 
 ## List
 `GET /ats/group`
@@ -235,7 +235,7 @@ Extension range: 5200–5399
 `POST /ats/group`
 | Field | Description |
 |-------|-------------|
-| id | Extension (5200–5399) |
+| id | Extension (5200-5399) |
 | users | Comma-separated extensions |
 | delay | Ring delay |
 | output | Target on no answer |
@@ -249,7 +249,7 @@ Extension range: 5200–5399
 
     "queues": """# Queue
 
-Extension range: 5400–5599
+Extension range: 5400-5599
 
 ## Types
 `GET /ats/queue/types`
@@ -262,9 +262,9 @@ Extension range: 5400–5599
 `POST /ats/queue`
 | Field | Description |
 |-------|-------------|
-| id | Extension (5400–5599) |
+| id | Extension (5400-5599) |
 | ring_time | Ring time |
-| type | 1–4 (see types) |
+| type | 1-4 (see types) |
 | users | Member extensions |
 | ring_in_use | Also ring if in use |
 | say_position | 1=uz, 2=ru, 3=en, null=off |
@@ -287,7 +287,7 @@ Extension range: 5400–5599
 
     "time-rules": """# Time Rule
 
-Extension range: 5600–5799
+Extension range: 5600-5799
 
 ## List
 `GET /ats/time-rule`
@@ -296,7 +296,7 @@ Extension range: 5600–5799
 `POST /ats/time-rule`
 | Field | Description |
 |-------|-------------|
-| id | Extension (5600–5799) |
+| id | Extension (5600-5799) |
 | days | Array of 7 day definitions |
 | exceptions | Array of exception dates |
 | working_time | Working hours target |
@@ -314,7 +314,7 @@ Exception: `{ from (dd.mm.YYYY), to (dd.mm.YYYY), output }`
 
     "voicemail": """# Voicemail
 
-Extension range: 5800–5999
+Extension range: 5800-5999
 
 ## List
 `GET /ats/voicemail`
@@ -323,7 +323,7 @@ Extension range: 5800–5999
 `POST /ats/voicemail` multipart/form-data
 | Field | Description |
 |-------|-------------|
-| id | Extension (5800–5999) |
+| id | Extension (5800-5999) |
 | max_duration | Max message length |
 | max_silence | Max silence before stop |
 | beep | Play beep before recording |
@@ -342,7 +342,7 @@ Extension range: 5800–5999
 
     "smart-redirect": """# Smart Redirect
 
-Extension range: 6000–6199
+Extension range: 6000-6199
 
 ## List
 `GET /ats/smart-redirect`
@@ -351,7 +351,7 @@ Extension range: 6000–6199
 `POST /ats/smart-redirect`
 | Field | Description |
 |-------|-------------|
-| id | Extension (6000–6199) |
+| id | Extension (6000-6199) |
 | title | Display name |
 | exceptions | Array of exception rules |
 | sources | Source integrations config |
@@ -359,7 +359,7 @@ Extension range: 6000–6199
 | timeout | Timeout before redirect |
 | output | Default target |
 
-Source fields: `history.enabled`, `amocrm.enabled` (+ `select_if_multiple_leads_exists`: first_lead/last_lead/contact/default_user), `bitrix.enabled`, `request.enabled` (+ `url`, `timeout` 1–5s).
+Source fields: `history.enabled`, `amocrm.enabled` (+ `select_if_multiple_leads_exists`: first_lead/last_lead/contact/default_user), `bitrix.enabled`, `request.enabled` (+ `url`, `timeout` 1-5s).
 
 ## Update
 `PUT /ats/smart-redirect/{id}`
@@ -393,13 +393,13 @@ Send `[]` to delete all webhooks.""",
 
 | Module | Range |
 |--------|-------|
-| SIP Users | 100–4999 |
-| IVR | 5000–5199 |
-| Ring Group | 5200–5399 |
-| Queue | 5400–5599 |
-| Time Rule | 5600–5799 |
-| Voicemail | 5800–5999 |
-| Smart Redirect | 6000–6199 |""",
+| SIP Users | 100-4999 |
+| IVR | 5000-5199 |
+| Ring Group | 5200-5399 |
+| Queue | 5400-5599 |
+| Time Rule | 5600-5799 |
+| Voicemail | 5800-5999 |
+| Smart Redirect | 6000-6199 |""",
 }
 
 UTEL_API_REFERENCE = """# UTEL API Reference
@@ -426,13 +426,13 @@ Audio uploads use `multipart/form-data`.
 
 | Module | Range |
 |--------|-------|
-| Users (SIP) | 100–4999 |
-| IVR | 5000–5199 |
-| Ring Group | 5200–5399 |
-| Queue | 5400–5599 |
-| Time Rule | 5600–5799 |
-| Voicemail | 5800–5999 |
-| Smart Redirect | 6000–6199 |
+| Users (SIP) | 100-4999 |
+| IVR | 5000-5199 |
+| Ring Group | 5200-5399 |
+| Queue | 5400-5599 |
+| Time Rule | 5600-5799 |
+| Voicemail | 5800-5999 |
+| Smart Redirect | 6000-6199 |
 
 ## Auth
 
@@ -486,7 +486,7 @@ After trunk creation, Asterisk PJSIP auto-reloads. `registrable: true` triggers 
 
 ## IVR
 
-Auto-attendant with button mapping (0–9, *, #).
+Auto-attendant with button mapping (0-9, *, #).
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
@@ -496,11 +496,11 @@ Auto-attendant with button mapping (0–9, *, #).
 | POST | `/ats/ivr/{id}/audio` | Upload audio — `multipart/form-data`, field `audio`, max 20MB (mp3/wav/ogg) |
 | DELETE | `/ats/ivr/{id}` | Delete |
 
-Button fields: `d1`–`d9` (digits 1–9), `d0` (0), `aster` (*), `sharp` (#). Accepts any module number as value.
+Button fields: `d1`-`d9` (digits 1-9), `d0` (0), `aster` (*), `sharp` (#). Accepts any module number as value.
 
 `allow_input: true` enables multi-digit extension input (1s wait between digits).
 
-`IvrResource` fields: `id`, `title`, `file_url`, `filename`, `allow_input`, `d0`–`d9`, `aster`, `sharp`, `delay`, `output`.
+`IvrResource` fields: `id`, `title`, `file_url`, `filename`, `allow_input`, `d0`-`d9`, `aster`, `sharp`, `delay`, `output`.
 
 ## Group (Ring Group)
 
