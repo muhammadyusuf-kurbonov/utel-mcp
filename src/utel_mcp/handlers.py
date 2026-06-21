@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Literal, Optional
 from urllib.parse import urlparse
 
 import httpx
@@ -14,14 +14,12 @@ from utel_mcp.utils import load_predefined_headers
 @mcp.tool()
 async def send_request(
     url: str,
-    method: str = "GET",
+    method: Literal["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"] = "GET",
     headers: Optional[Dict[str, str]] = None,
     json_data: Optional[Dict[str, Any]] = None,
     params: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Send a request to the UTEL API. Only relative paths are accepted — the base URL comes from `UTEL_API_BASE_URL` env (e.g. `/ats/ps-user`). The `Authorization: Bearer` token (`HTTP_BEARER_TOKEN`) is already included. Requests to hosts outside the configured base URL are rejected."""
-    method = method.upper()
-
     if not UTEL_API_BASE_URL:
         return "Error: `UTEL_API_BASE_URL` env var is not set."
 
