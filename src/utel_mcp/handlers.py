@@ -1,7 +1,7 @@
 import json
 import logging
+import posixpath
 from typing import Any, Dict, Literal, Optional
-from urllib.parse import urlparse
 
 import httpx
 from mcp.server.fastmcp import FastMCP
@@ -13,24 +13,18 @@ from utel_mcp.utils import load_predefined_headers
 
 @mcp.tool()
 async def send_request(
-    url: str,
+    path: str,
     method: Literal["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"] = "GET",
     headers: Optional[Dict[str, str]] = None,
     json_data: Optional[Dict[str, Any]] = None,
     params: Optional[Dict[str, Any]] = None,
 ) -> str:
-    """Send a request to the UTEL API. Only relative paths are accepted — the base URL comes from `UTEL_API_BASE_URL` env (e.g. `/ats/ps-user`). The `Authorization: Bearer` token (`HTTP_BEARER_TOKEN`) is already included. Requests to hosts outside the configured base URL are rejected."""
+    """Send a request to the UTEL API. The `path` is joined with `UTEL_API_BASE_URL` (env var). Use a leading slash, e.g. `/ats/ps-user`. The `Authorization: Bearer` token (`HTTP_BEARER_TOKEN`) is already included on every request."""
     if not UTEL_API_BASE_URL:
         return "Error: `UTEL_API_BASE_URL` env var is not set."
 
-    parsed_base = urlparse(UTEL_API_BASE_URL)
-    full_url = UTEL_API_BASE_URL.rstrip("/") + "/" + url.lstrip("/")
-    parsed_url = urlparse(full_url)
-
-    if parsed_url.netloc != parsed_base.netloc:
-        return "Error: URL resolves to a different host — only endpoints within the configured `UTEL_API_BASE_URL` are allowed."
-
-    url = full_url
+    resolved_path = posixpath.normpath("/" + path.lstrip("/"))
+    url = UTEL_API_BASE_URL.rstrip("/") + resolved_path
 
     merged_headers = load_predefined_headers()
     if headers:
